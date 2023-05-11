@@ -8,5 +8,4 @@ const UserSchema = new mongoose.Schema({
 
 const UserModel = mongoose.model('User', UserSchema);
 
-
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E
+module.exports = UserModel;
