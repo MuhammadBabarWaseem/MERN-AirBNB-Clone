@@ -18,7 +18,6 @@ app.use(cors({
 
 mongoose.connect(process.env.MONGO_URL)
 
-
 app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -39,14 +38,13 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const userDoc = await User.findOne({ email });
-    if (userDoc) { 
+    if (userDoc) {
         const passOk = bcrypt.compareSync(password, userDoc.password);
         if (passOk) {
-            jwt.sign({email: userDoc.email, id: userDoc._id}, jwtSecret, {}, (err, token) => {
-                if(err) throw err;
-                res.cookie('token', token).json('pass ok')
-            })
-            res.json({ message: "Pass Ok" });
+            jwt.sign({ email: userDoc.email, id: userDoc._id }, jwtSecret, {}, (err, token) => {
+                if (err) throw err;
+                res.cookie('token', token).json(userDoc)
+            });
         } else {
             res.status(422).json({ error: "Invalid password" });
         }
