@@ -5,12 +5,14 @@ const User = require('./models/User');
 const app = express();
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
-app.use(express.json())
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET_KEY;
 
+app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
@@ -27,7 +29,7 @@ app.post('/register', async (req, res) => {
             email,
             password: bcrypt.hashSync(password, bcryptSalt)
         })
-        res.json(userDoc);
+        // res.json(userDoc);
     } catch (error) {
         res.status(422).json(error);
     }
@@ -41,7 +43,7 @@ app.post('/login', async (req, res) => {
     if (userDoc) {
         const passOk = bcrypt.compareSync(password, userDoc.password);
         if (passOk) {
-            jwt.sign({ email: userDoc.email, id: userDoc._id }, jwtSecret, {}, (err, token) => {
+            jwt.sign({ email: userDoc.email, id: userDoc._id}, jwtSecret, {}, (err, token) => {
                 if (err) throw err;
                 res.cookie('token', token).json(userDoc)
             });
@@ -52,6 +54,19 @@ app.post('/login', async (req, res) => {
         res.status(404).json({ error: "User not found" });
     }
 });
+
+app.get('/profile', (req, res) => {
+    const { token } = req.cookies;
+    if (token) {
+        jwt.verify(token, jwtSecret, {}, (err, user) => {
+            if (err) throw err;
+
+            res.json(user);
+        })
+    } else {
+        res.json(null)
+    }
+})
 
 
 
@@ -64,7 +79,6 @@ app.listen(4000, () => {
 
 
 
-
-
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 1 hour 40 min
 
 
