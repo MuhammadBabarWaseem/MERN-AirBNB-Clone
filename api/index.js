@@ -55,6 +55,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
 app.get('/profile', (req, res) => {
     const { token } = req.cookies;
     if (token) {
@@ -66,6 +67,11 @@ app.get('/profile', (req, res) => {
     } else {
         res.json(null)
     }
+})
+
+app.get('/users' , async (req, res) => {
+    const userlist = await User.find();
+    res.json({users : userlist});
 })
 
 
