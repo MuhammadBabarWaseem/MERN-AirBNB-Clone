@@ -6,6 +6,7 @@ const app = express();
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
+const imageDownloader = require('image-downloader');
 require('dotenv').config()
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -62,7 +63,7 @@ app.get('/profile', (req, res) => {
         jwt.verify(token, jwtSecret, {}, async (err, userData) => {
             if (err) throw err;
 
-            const {name, email, _id } = await User.findById(userData.id);
+            const { name, email, _id } = await User.findById(userData.id);
 
             res.json({ name, email, _id });
         })
@@ -71,8 +72,19 @@ app.get('/profile', (req, res) => {
     }
 })
 
-app.post('/logout', (req,res) => {
+app.post('/logout', (req, res) => {
     res.cookie('token', '').json(true);
+})
+
+app.post('/upload-by-link', async (req, res) => {
+    const { link } = req.body;
+    const newName = Date.now() + '.jpg'
+    await imageDownloader.image({
+        url: link,
+        dest: __dirname + '\\uploads\\' +  'img' + newName,
+    });
+    res.json(__dirname + '\\uploads\\' + newName);
+
 })
 
 
@@ -84,6 +96,6 @@ app.listen(4000, () => {
 
 
 
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E 1 hour 40 min
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 2 hour 55 min
 
 
