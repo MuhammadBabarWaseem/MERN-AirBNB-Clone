@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 
-const PhotosUploader = ({addedPhotos, onChange}) => {
+const PhotosUploader = ({ addedPhotos, onChange }) => {
 
     const [photoLink, setPhotoLink] = useState('');
 
     const addPhotoByLink = async (e) => {
         e.preventDefault();
         const { data: filename } = await axios.post('/upload-by-link', { link: photoLink });
-        onChange(prev => {
+        // onChange((prev) => [...prev, filename]);
+        onChange((prev) => {
             return [...prev, filename];
         });
         setPhotoLink('');
@@ -26,7 +27,8 @@ const PhotosUploader = ({addedPhotos, onChange}) => {
             headers: { 'Content-type': 'multipart/form-data' }
         }).then(response => {
             const { data: filenames } = response;
-            onChange(prev => {
+            // onChange((prev) => [...prev, ...filenames]);
+            onChange((prev) => {
                 return [...prev, ...filenames]
             });
         });
@@ -42,7 +44,7 @@ const PhotosUploader = ({addedPhotos, onChange}) => {
             </div>
 
             <div className='mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-                {addedPhotos.length > 0 && addedPhotos.map((link, index) => (
+                {addedPhotos && addedPhotos.length > 0 && addedPhotos.map((link, index) => (
                     <div className='h-32 flex' key={index}>
                         <img className='rounded-2xl w-full object-cover' src={'http://localhost:4000/uploads/' + link} alt="Dummy" />
                     </div>

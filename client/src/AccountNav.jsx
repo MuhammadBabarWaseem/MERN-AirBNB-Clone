@@ -10,8 +10,6 @@ const AccountNav = () => {
         subpage = 'profile';
     }
 
-    console.log({subpage})
-
     const linkClasses = (type = null) => {
 
         const isActive = pathname === '/account' && type === 'profile';
