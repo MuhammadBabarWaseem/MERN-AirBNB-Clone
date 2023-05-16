@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const User = require('./models/User');
+const Place = require('./models/Place');
 const app = express();
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
@@ -89,20 +90,47 @@ app.post('/upload-by-link', async (req, res) => {
     res.json(newName);
 })
 
-const photoMiddleware = multer({dest:'uploads/'});
+const photoMiddleware = multer({ dest: 'uploads/' });
 app.post('/upload', photoMiddleware.array('photos', 50), (req, res) => {
     const uploadedFiles = [];
     for (let i = 0; i < req.files.length; i++) {
         const { path, originalname } = req.files[i];
         const parts = originalname.split('.');
         const ext = parts[parts.length - 1];
-        const newPath = path + '.' + ext;   
+        const newPath = path + '.' + ext;
         fs.renameSync(path, newPath);
-        uploadedFiles.push(newPath.replace("uploads\\" , ""));
+        uploadedFiles.push(newPath.replace("uploads\\", ""));
 
 
     }
     res.json(uploadedFiles);
+})
+
+app.post('/places', async (req, res) => {
+
+    const { token } = req.cookies;
+    const {
+        title, address, addedPhotos,
+        description, perks, extraInfo,
+        checkIn, checkOut, maxGuest
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+
+        const placeDoc = await Place.create({
+            owner: userData.id,
+            title, address, addedPhotos,
+            description, perks, extraInfo,
+            checkIn, checkOut, maxGuest
+        });
+
+        res.json(placeDoc);
+
+    })
+
+
+
 })
 
 
@@ -114,6 +142,6 @@ app.listen(4000, () => {
 
 
 
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E 2 hour 55 min
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 01 min
 
 
