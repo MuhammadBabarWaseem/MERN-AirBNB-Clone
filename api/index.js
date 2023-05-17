@@ -146,7 +146,6 @@ app.get('/places', async (req, res) => {
 app.get('/places/:id', async (req, res) => {
     const { id } = req.params;
     res.json(await Place.findById(id));
-
 })
 
 app.put('/places', async (req, res) => {
@@ -166,7 +165,7 @@ app.put('/places', async (req, res) => {
                 title, address, photos: addedPhotos,
                 description, perks, extraInfo,
                 checkIn, checkOut, maxGuest
-            })
+            }); 
 
             await placeDoc.save();
             res.json('ok');
@@ -185,6 +184,6 @@ app.listen(4000, () => {
 
 
 
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 31 min
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 33 min
 
 

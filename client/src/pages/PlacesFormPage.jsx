@@ -27,34 +27,34 @@ const PlacesFormPage = () => {
             const { data } = response;
             setTitle(data.title);
             setAddress(data.address);
-            setAddedPhotos(data.addedPhotos || []);
+            setAddedPhotos(data.photos);
             setDescription(data.description);
             setPerks(data.perks);
             setExtraInfo(data.extraInfo);
             setCheckIn(data.checkIn);
             setCheckOut(data.checkOut);
-            setMaxGuest(data.maxGuest);
+            setMaxGuest(data.maxGuest || 1);
         });
 
     }, [id])
 
     const savePlace = async (ev) => {
         ev.preventDefault();
+        const placeData = {
+            title, address, addedPhotos,
+            description, perks, extraInfo,
+            checkIn, checkOut, maxGuest
+        }
+
         if (id) {
             await axios.put('/places', {
-                id,
-                title, address, addedPhotos,
-                description, perks, extraInfo,
-                checkIn, checkOut, maxGuest
+                id, ...placeData
+
             });
             alert('Place Updated successfully')
             setRedirect(true);
         } else {
-            await axios.post('/places', {
-                title, address, addedPhotos,
-                description, perks, extraInfo,
-                checkIn, checkOut, maxGuest
-            });
+            await axios.post('/places', placeData);
             alert('Place Created successfully')
             setRedirect(true);
         }
@@ -110,7 +110,7 @@ const PlacesFormPage = () => {
 
                         <div>
                             <h3 className='mt-2 -mb-1 '>Max Number Of Guests</h3>
-                            <input type="number" value={maxGuest} onChange={e => setMaxGuest(e.target.value)} placeholder='4' />
+                            <input type="number" value={maxGuest || 1} onChange={e => setMaxGuest(e.target.value)} placeholder='4' />
                         </div>
                     </div>
 
