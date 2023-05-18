@@ -24,7 +24,7 @@ const PageForPlace = () => {
         return (
             <div className='absolute inset-0  min-h-screen'>
                 <div className='p-8 grid gap-4 bg-black text-white place-content-center'>
-                    <h2 className='text-3xl mr-36'>Photos Of {place.title}</h2>
+                    <h2 className='text-3xl mr-48'>Photos Of {place.title}</h2>
                     <div>
                         <button onClick={() => setShowAllPhotos(false)} className='fixed top-8 flex right-12 gap-1 py-2 px-4 rounded-2xl bg-black text-gray-50 shadow shadow-black border border-white'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
