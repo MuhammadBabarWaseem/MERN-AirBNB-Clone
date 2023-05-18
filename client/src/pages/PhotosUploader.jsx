@@ -40,9 +40,13 @@ const PhotosUploader = ({ addedPhotos, onChange }) => {
 
     const selectAsMainPhoto = (ev, filename) => {
         ev.preventDefault();
-        const addedPhotosWithoutSelected = addedPhotos.filter(photo => photo !== filename);
-        const newAddedPhotos = [filename, ...addedPhotosWithoutSelected];
-        onChange(newAddedPhotos);
+        // approach 1
+        // const addedPhotosWithoutSelected = addedPhotos.filter(photo => photo !== filename);
+        // const newAddedPhotos = [filename, ...addedPhotosWithoutSelected];
+        // onChange(newAddedPhotos);
+
+        // approach 2
+        onChange([filename, ...addedPhotos.filter(photo => photo !== filename)])
     }
 
     return (

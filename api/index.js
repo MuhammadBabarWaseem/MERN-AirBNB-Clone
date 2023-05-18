@@ -113,7 +113,7 @@ app.post('/places', async (req, res) => {
     const {
         title, address, addedPhotos,
         description, perks, extraInfo,
-        checkIn, checkOut, maxGuest
+        checkIn, checkOut, maxGuest,price
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -123,7 +123,7 @@ app.post('/places', async (req, res) => {
             owner: userData.id,
             title, address, photos: addedPhotos,
             description, perks, extraInfo,
-            checkIn, checkOut, maxGuest
+            checkIn, checkOut, maxGuest,price
         });
 
         res.json(placeDoc);
@@ -134,7 +134,7 @@ app.post('/places', async (req, res) => {
 
 })
 
-app.get('/places', async (req, res) => {
+app.get('/user-places', async (req, res) => {
     const { token } = req.cookies;
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -154,7 +154,7 @@ app.put('/places', async (req, res) => {
     const {
         id, title, address, addedPhotos,
         description, perks, extraInfo,
-        checkIn, checkOut, maxGuest
+        checkIn, checkOut, maxGuest, price,
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -165,8 +165,8 @@ app.put('/places', async (req, res) => {
             placeDoc.set({
                 title, address, photos: addedPhotos,
                 description, perks, extraInfo,
-                checkIn, checkOut, maxGuest
-            }); 
+                checkIn, checkOut, maxGuest,price
+            });
 
             await placeDoc.save();
             res.json('ok');
@@ -175,6 +175,12 @@ app.put('/places', async (req, res) => {
 
 
 });
+
+app.get('/places', async (req, res) => {
+    res.json(await Place.find())
+})
+
+
 
 
 app.listen(4000, () => {
@@ -185,6 +191,6 @@ app.listen(4000, () => {
 
 
 
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 33 min
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 46 min
 
 

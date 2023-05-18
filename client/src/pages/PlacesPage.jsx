@@ -14,7 +14,7 @@ const PlacesPage = () => {
         if (ready) {
             setLoading(true);
 
-            axios.get('/places').then(({ data }) => {
+            axios.get('/user-places').then(({ data }) => {
                 setPlaces(data);
                 setLoading(false);
             });

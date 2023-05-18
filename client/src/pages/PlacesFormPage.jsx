@@ -18,6 +18,7 @@ const PlacesFormPage = () => {
     const [checkOut, setCheckOut] = useState('');
     const [maxGuest, setMaxGuest] = useState(1);
     const [redirect, setRedirect] = useState(false);
+    const [price, setPrice] = useState(100);
 
     useEffect(() => {
         if (!id) {
@@ -34,6 +35,7 @@ const PlacesFormPage = () => {
             setCheckIn(data.checkIn);
             setCheckOut(data.checkOut);
             setMaxGuest(data.maxGuest || 1);
+            setPrice(data.price || 100);
         });
 
     }, [id])
@@ -43,7 +45,7 @@ const PlacesFormPage = () => {
         const placeData = {
             title, address, addedPhotos,
             description, perks, extraInfo,
-            checkIn, checkOut, maxGuest
+            checkIn, checkOut, maxGuest, price
         }
 
         if (id) {
@@ -97,7 +99,7 @@ const PlacesFormPage = () => {
                     <h2 className='text-xl mt-4'>Check In & Check Out Times</h2>
                     <p className='text-gray-500 text-sm'>Add Check In & Check Out Time, Remember To Have Some Time Window For Cleaning or Managing The Place</p>
 
-                    <div className='grid gap-2 sm:grid-cols-3 '>
+                    <div className='grid gap-2 grid-cols-2 md:grid-cols-4 '>
                         <div>
                             <h3 className='mt-2 -mb-1 '>Check In Time</h3>
                             <input type="text" value={checkIn || ''} onChange={e => setCheckIn(e.target.value)} placeholder='14:00' />
@@ -112,6 +114,14 @@ const PlacesFormPage = () => {
                             <h3 className='mt-2 -mb-1 '>Max Number Of Guests</h3>
                             <input type="number" value={maxGuest || 1} onChange={e => setMaxGuest(e.target.value)} placeholder='4' />
                         </div>
+
+                        <div>
+                            <h3 className='mt-2 -mb-1 '>Price Per Night</h3>
+                            <input type="number" value={price || 100} onChange={e => setPrice(e.target.value)} placeholder='4' />
+                        </div>
+
+
+
                     </div>
 
                     <button className='primary  my-4'>Save</button>
