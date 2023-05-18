@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import BookingWidget from '../BookingWidget';
 
 const PageForPlace = () => {
 
@@ -23,7 +24,7 @@ const PageForPlace = () => {
         return (
             <div className='absolute inset-0  min-h-screen'>
                 <div className='p-8 grid gap-4 bg-black text-white place-content-center'>
-                    <h2 className='text-3xl'>Photos Of {place.title}</h2>
+                    <h2 className='text-3xl mr-36'>Photos Of {place.title}</h2>
                     <div>
                         <button onClick={() => setShowAllPhotos(false)} className='fixed top-8 flex right-12 gap-1 py-2 px-4 rounded-2xl bg-black text-gray-50 shadow shadow-black border border-white'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -44,8 +45,8 @@ const PageForPlace = () => {
     }
 
     return (
-        <div className='mt-4 bg-gray-100 -mx-8 px-8 py-8'>
-            <h1 className='text-3xl'>{place.title}</h1>
+        <div className='mt-4 bg-gray-100 -mx-8 px-8 pt-8'>
+            <h1 className='text-3xl '>{place.title}</h1>
             <a target='_blank' className='my-2 gap-1 my-3 flex block font-semibold text-sm underline' href={'https://maps.google.com/?q=' + place.address}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5  h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -59,13 +60,13 @@ const PageForPlace = () => {
                     <div>
                         {place.photos?.[0] && (
                             <div>
-                                <img className='aspect-square object-cover' width='640px' height='420px' src={'http://localhost:4000/uploads/' + place.photos[0]} alt="" />
+                                <img onClick={() => setShowAllPhotos(true)} className='aspect-square  cursor-pointer object-cover' width='640px' height='420px' src={'http://localhost:4000/uploads/' + place.photos[0]} alt="" />
                             </div>
                         )}
                     </div>
                     <div className='grid grid-cols-2 gap-4'>
                         {place.photos?.slice(1, 5).map((photo, index) => (
-                            <img key={index} className='aspect-square object-cover' width='320px' height='200px' src={'http://localhost:4000/uploads/' + photo} alt="" />
+                            <img onClick={() => setShowAllPhotos(true)} key={index} className='aspect-square cursor-pointer  object-cover' width='320px' height='200px' src={'http://localhost:4000/uploads/' + photo} alt="" />
                         ))}
                     </div>
                 </div>
@@ -77,7 +78,27 @@ const PageForPlace = () => {
                 </button>
             </div>
 
-            
+            <div className='mt-8 mb-8 grid gap-8 grid-cols-1 md:grid-cols-[2fr_1fr]'>
+                <div>
+                    <div className='my-4'>
+                        <h2 className='font-semibold text-2xl'>Description:</h2>
+                        {place.description}
+                    </div>
+
+                    Check In: {place.checkIn} <br />
+                    Check Out: {place.checkOut} <br />
+                    Max Guests: {place.maxGuest}
+                </div>
+                <div>
+                    <BookingWidget place={place} />
+                </div>
+            </div>
+            <div className='bg-white -mx-8 px-8 py-8 border-t'>
+                <div>
+                    <h2 className='font-semibold text-2xl'>Extra Info:</h2>
+                </div>
+                <div className='mb-4 mt-2 text-sm text-gray-700 leading-5'>{place.extraInfo}</div>
+            </div>
         </div>
     )
 }
