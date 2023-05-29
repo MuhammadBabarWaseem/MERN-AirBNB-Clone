@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Place = require('./models/Place');
+const Booking = require('./models/Booking');
 const app = express();
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
@@ -24,6 +25,15 @@ app.use(cors({
 }));
 
 mongoose.connect(process.env.MONGO_URL)
+
+function getUserDataFromToken(req) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            resolve(userData);
+        })
+    });
+}
 
 app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
@@ -113,7 +123,7 @@ app.post('/places', async (req, res) => {
     const {
         title, address, addedPhotos,
         description, perks, extraInfo,
-        checkIn, checkOut, maxGuest,price
+        checkIn, checkOut, maxGuest, price
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -123,7 +133,7 @@ app.post('/places', async (req, res) => {
             owner: userData.id,
             title, address, photos: addedPhotos,
             description, perks, extraInfo,
-            checkIn, checkOut, maxGuest,price
+            checkIn, checkOut, maxGuest, price
         });
 
         res.json(placeDoc);
@@ -165,7 +175,7 @@ app.put('/places', async (req, res) => {
             placeDoc.set({
                 title, address, photos: addedPhotos,
                 description, perks, extraInfo,
-                checkIn, checkOut, maxGuest,price
+                checkIn, checkOut, maxGuest, price
             });
 
             await placeDoc.save();
@@ -180,6 +190,34 @@ app.get('/places', async (req, res) => {
     res.json(await Place.find())
 })
 
+app.post('/bookings', async (req, res) => {
+    const userData = await getUserDataFromToken(req)
+    const {
+        placeId, checkIn, checkOut,
+        numberOfGuest, name, phone, price } = req.body;
+
+    Booking.create({
+        placeId, checkIn, checkOut,
+        numberOfGuest, name, phone, price,
+        user : userData.id,
+    }).then((doc) => {
+        res.json(doc);
+    }).catch((err) => {
+        throw err;
+    })
+
+
+
+})
+
+
+
+app.get('/bookings', async (req, res) => {
+    const userData = await getUserDataFromToken(req);
+    res.json(await Booking.find({user: userData.id})).populate('place')
+
+})
+
 
 
 
@@ -191,6 +229,6 @@ app.listen(4000, () => {
 
 
 
-// https://www.youtube.com/watch?v=MpQbwtSiZ7E 4 hour 46 min
+// https://www.youtube.com/watch?v=MpQbwtSiZ7E 5 hour 57 min
 
 
